@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            var currentPlayer = 0; // 0 for O's, 1 for X's
+            var currentPlayer = 1; // 1 for X's, -1 for O's
 
             // Initialize the game board
             var board = $('#game-board');
@@ -31,7 +31,7 @@
 
                 if (cell.text() === '') { // Check if the cell is empty
                     // Update UI
-                    cell.text(currentPlayer === 0 ? 'O' : 'X');
+                    cell.text(currentPlayer === 1 ? 'X' : 'O');
                     
                     // Make AJAX call to Flask server
                     $.ajax({
@@ -42,9 +42,9 @@
                         success: function(response) {
                             if(response.status.includes('won')) {
                                 alert(response.status);
-                                // Reset the board or handle game end
+                                // Optionally, reset the board or handle game end
                             }
-                            currentPlayer = 1 - currentPlayer; // Switch player
+                            currentPlayer = currentPlayer === 1 ? -1 : 1; // Switch player
                         },
                         error: function() {
                             alert('Illegal move or error processing the move');
