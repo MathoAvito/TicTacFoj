@@ -8,11 +8,13 @@
 </head>
 <body>
     <div id="game-board">
-        <!-- Dynamically create game board using JavaScript -->
+        <!-- Game board is created dynamically using JavaScript -->
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            var currentPlayer = 0; // 0 for O's, 1 for X's
+
             // Initialize the game board
             var board = $('#game-board');
             for (var i = 0; i < 3; i++) {
@@ -25,7 +27,33 @@
             $('.cell').click(function() {
                 var row = $(this).data('row');
                 var col = $(this).data('col');
-                // Add logic to update the board and make an AJAX call to Flask server
+                var cell = $(this);
+
+                if (cell.text() === '') { // Check if the cell is empty
+                    // Update UI
+                    cell.text(currentPlayer === 0 ? 'O' : 'X');
+                    
+                    // Make AJAX call to Flask server
+                    $.ajax({
+                        url: '/play',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({i: row, j: col, player: currentPlayer}),
+                        success: function(response) {
+                            if(response.status.includes('won')) {
+                                alert(response.status);
+                                // Reset the board or handle game end
+                            }
+                            currentPlayer = 1 - currentPlayer; // Switch player
+                        },
+                        error: function() {
+                            alert('Illegal move or error processing the move');
+                            cell.text(''); // Reset the cell text
+                        }
+                    });
+                } else {
+                    alert('Cell is already filled');
+                }
             });
         });
     </script>
