@@ -8,11 +8,26 @@
 </head>
 <body>
     <div id="game-board">
-        <!-- Game board will be here -->
+        <!-- Dynamically create game board using JavaScript -->
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // JavaScript for handling game interactions
+        $(document).ready(function() {
+            // Initialize the game board
+            var board = $('#game-board');
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; j < 3; j++) {
+                    board.append('<div class="cell" data-row="' + i + '" data-col="' + j + '"></div>');
+                }
+            }
+
+            // Handle cell click events
+            $('.cell').click(function() {
+                var row = $(this).data('row');
+                var col = $(this).data('col');
+                // Add logic to update the board and make an AJAX call to Flask server
+            });
+        });
     </script>
 </body>
 </html>
